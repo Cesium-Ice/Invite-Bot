@@ -8,7 +8,9 @@ load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 GUILD = os.getenv('DISCORD_GUILD')
 
-client = discord.Client()
+intents = discord.Intents.default()
+intents.message_content = True
+client = discord.Client(intents=intents)
 
 @client.event
 async def on_ready():
@@ -18,19 +20,16 @@ async def on_ready():
     f'{guild.name}(id: {guild.id})'
   )
 
-async def on_member_join(member):
-  await member.create_dm()
-  await member.dm_channel.send(
-    f'Hi {member.name}, welcome to my Discord server!'
-  )
-
+@client.event
 async def on_message(message):
   if message.author == client.user:
     return
 
-  if message.content.lower() == '!invite':
+  print ("message detected: {}\n".format(message.content))
+  if message.content == '!invite':
     response = "Message with generated invite link"
     await message.channel.send(response)
-    await message.author.create_dm()
-    await message.author.dm_channel.send(f'Hi {message.author.name}, here is a temp invite link!')
+    # await message.author.create_dm()
+    # await message.author.dm_channel.send(f'Hi {message.author.name}, here is a temp invite link!')
+
 client.run(TOKEN)
