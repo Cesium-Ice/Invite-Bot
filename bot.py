@@ -27,7 +27,14 @@ async def on_message(message):
 
   print ("message detected: {}\n".format(message.content))
   if message.content == '!invite':
-    response = "Message with generated invite link"
+    #todo: change this so I grab this channel from the client permissions, instead of hardcoding
+    channel = client.get_channel(1070253269907161118)
+
+    link = await channel.create_invite(max_age=86400, max_uses=1)
+
+    guild = discord.utils.find(lambda g: g.name == GUILD, client.guilds)
+
+    response = f"Hi {message.author.name}, here is an invite for {guild.name}: {link}\n Please note that this invite can only be used once and expires in 24 hours."
     await message.channel.send(response)
     # await message.author.create_dm()
     # await message.author.dm_channel.send(f'Hi {message.author.name}, here is a temp invite link!')
